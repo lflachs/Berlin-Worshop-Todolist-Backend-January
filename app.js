@@ -5,6 +5,8 @@ const errorMiddleware = require('./middleware/error-handling.middleware');
 
 const PORT = process.env.PORT || 8000;
 
+app.use(express.json());
+
 app.use(mainRouter);
 
 app.use('*', (req, res, next) => {
