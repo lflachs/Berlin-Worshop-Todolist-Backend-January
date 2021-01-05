@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const todolistRoutes = require('./todolist.routes');
+const todolistRouter = require('./todolist.routes');
 
-router.use('/todolist', todolistRoutes);
+router.use('/todolist', todolistRouter);
 
 module.exports = router;

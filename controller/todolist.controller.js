@@ -1,7 +1,13 @@
-const { PrismaClient } = require('@prisma/client');
-const client = new PrismaClient();
+const client = require('../config/prisma-config');
+const createError = require('http-errors');
 
-exports.getAllTodolist = async (req, res, next) => {
+const findTodolist = async (id) => {
+	const todolist = await client.todolist.findUnique({ where: { id } });
+	if (!todolist) {
+		throw new createError(404, 'todolist not found');
+	}
+};
+exports.getAllTodolists = async (req, res, next) => {
 	try {
 		const todolists = await client.todolist.findMany();
 		res.status(200).json(todolists);
@@ -9,14 +15,25 @@ exports.getAllTodolist = async (req, res, next) => {
 		next(err);
 	}
 };
-// req contain information
-// process information etc
-// response -
+exports.getTodolist = async (req, res, next) => {
+	try {
+		const todolistId = Number(req.params.todolistId);
+		await findTodolist(todolistId);
+		const todolist = await client.todolist.findUnique({
+			where: { id: todolistId },
+			include: { task: true },
+		});
+		res.status(200).json(todolist);
+	} catch (err) {
+		next(err);
+	}
+};
+
 exports.createTodolist = async (req, res, next) => {
 	try {
-		const title = req.body.title;
+		const newTitle = req.body.title;
 		const createdTodolist = await client.todolist.create({
-			data: { title: title },
+			data: { title: newTitle },
 		});
 		res.status(200).json(createdTodolist);
 	} catch (err) {
@@ -45,6 +62,56 @@ exports.deleteTodolist = async (req, res, next) => {
 			where: { id: todolistId },
 		});
 		res.status(200).json(deletedTodolist);
+	} catch (err) {
+		next(err);
+	}
+};
+
+exports.createTask = async (req, res, next) => {
+	try {
+		const todolistId = Number(req.params.todolistId);
+		await findTodolist(todolistId);
+		const newTitle = req.body.title;
+		const createdTask = await client.task.create({
+			data: {
+				title: newTitle,
+				done: false,
+				todolist: { connect: { id: todolistId } },
+			},
+		});
+		res.status(200).json(createdTask);
+	} catch (err) {
+		next(err);
+	}
+};
+
+exports.updateTask = async (req, res, next) => {
+	try {
+		const todolistId = Number(req.params.todolistId);
+		await findTodolist(todolistId);
+		const taskId = Number(req.params.taskId);
+		const newTitle = req.body.title;
+		const newDone = req.body.done;
+		const updatedTodolist = await client.task.update({
+			where: { id: taskId },
+			data: { title: newTitle, done: newDone },
+		});
+		res.status(200).json(updatedTodolist);
+	} catch (err) {
+		next(err);
+	}
+};
+
+exports.deleteTask = async (req, res, next) => {
+	try {
+		const todolistId = Number(req.params.todolistId);
+		const taskId = Number(req.params.taskId);
+
+		await findTodolist(todolistId);
+		const deletedTask = await client.task.delete({
+			where: { id: taskId },
+		});
+		res.status(200).json(deletedTask);
 	} catch (err) {
 		next(err);
 	}
