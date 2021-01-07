@@ -20,6 +20,21 @@ model Task {
     todolistId Int?
 }
 
+model Book {
+    id      Int      @id @default(autoincrement())
+    title   String
+    cover   String?
+    authors Author[]
+}
+
+model Author {
+    id        Int    @id @default(autoincrement())
+    email     String @unique
+    firstName String
+    lastName  String
+    books     Book[]
+}
+
 generator client {
     provider = "prisma-client-js"
 }

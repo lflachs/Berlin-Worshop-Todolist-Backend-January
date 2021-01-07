@@ -15,6 +15,14 @@ exports.getAllTodolists = async (req, res, next) => {
 		next(err);
 	}
 };
+exports.getAllTasks = async (req, res, next) => {
+	try {
+		const tasks = await client.task.findMany();
+		res.status(200).json(tasks);
+	} catch (err) {
+		next(err);
+	}
+};
 exports.getTodolist = async (req, res, next) => {
 	try {
 		const todolistId = Number(req.params.todolistId);
@@ -60,6 +68,7 @@ exports.deleteTodolist = async (req, res, next) => {
 		const todolistId = Number(req.params.todolistId);
 		const deletedTodolist = await client.todolist.delete({
 			where: { id: todolistId },
+			include: { task: true },
 		});
 		res.status(200).json(deletedTodolist);
 	} catch (err) {
@@ -90,11 +99,15 @@ exports.updateTask = async (req, res, next) => {
 		const todolistId = Number(req.params.todolistId);
 		await findTodolist(todolistId);
 		const taskId = Number(req.params.taskId);
+		const newTodolistId = Number(req.body.todolistId);
 		const newTitle = req.body.title;
 		const newDone = req.body.done;
 		const updatedTodolist = await client.task.update({
 			where: { id: taskId },
-			data: { title: newTitle, done: newDone },
+			data: {
+				title: newTitle,
+				done: newDone,
+			},
 		});
 		res.status(200).json(updatedTodolist);
 	} catch (err) {

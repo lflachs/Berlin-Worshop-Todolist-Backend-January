@@ -17,6 +17,10 @@ app.use('*', (req, res, next) => {
 
 app.use(errorMiddleware);
 
-app.listen(PORT, () => {
-	console.log(`app is running on ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+	app.listen(PORT, () => {
+		console.log(`app is running on ${PORT}`);
+	});
+}
+
+module.exports = app;
