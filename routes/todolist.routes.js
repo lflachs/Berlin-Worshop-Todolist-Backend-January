@@ -8,11 +8,12 @@ const {
 	createTodolistValidator,
 	updateTodolistValidator,
 } = require('../validators/todolist.validators');
+const authMiddleware = require('../middleware/auth.middleware');
 
 const router = require('express').Router();
 
-router.get('/', getAllTodolist);
-router.post('/', createTodolistValidator, createTodolist);
+router.get('/', authMiddleware, getAllTodolist);
+router.post('/', authMiddleware, createTodolist);
 router.put('/:todolistId', updateTodolistValidator, updateTodolist);
 router.delete('/:todolistId', deleteTodolist);
 

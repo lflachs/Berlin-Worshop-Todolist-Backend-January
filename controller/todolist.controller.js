@@ -16,7 +16,7 @@ exports.createTodolist = async (req, res, next) => {
 	try {
 		const title = req.body.title;
 		const createdTodolist = await client.todolist.create({
-			data: { title: title },
+			data: { title: title, user: { connect: { id: req.userId } } },
 		});
 		res.status(200).json(createdTodolist);
 	} catch (err) {
