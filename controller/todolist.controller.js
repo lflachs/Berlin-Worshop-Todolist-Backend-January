@@ -26,7 +26,7 @@ exports.createTodolist = async (req, res, next) => {
 
 exports.updateTodolist = async (req, res, next) => {
 	try {
-		const todolistId = Number(req.params.todolistId);
+		const todolistId = req.params.todolistId;
 		const newTitle = req.body.title;
 		const updatedTodolist = await client.todolist.update({
 			where: { id: todolistId },
