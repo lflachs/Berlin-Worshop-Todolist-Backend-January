@@ -3,9 +3,17 @@ const createError = require('http-errors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const findUserByEmail = async (email) => {
+	const user = await client.user.findUnique({ where: { email } });
+	return user;
+};
 exports.register = async (req, res, next) => {
 	try {
 		const { email, password } = req.body;
+		const userExist = await findUserByEmail(email);
+		if (userExist) {
+			throw createError(422, 'User already registered');
+		}
 		const hashedPassword = await bcrypt.hash(password, 12);
 		const newUser = await client.user.create({
 			data: {

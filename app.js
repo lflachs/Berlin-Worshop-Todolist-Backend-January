@@ -4,18 +4,20 @@ const mainRouter = require('./routes');
 const cookieParser = require('cookie-parser');
 const errorMiddleware = require('./middleware/error-handling.middleware');
 const db = require('./config/db');
-
+const morgan = require('morgan');
+const cors = require('cors');
 const PORT = process.env.PORT || 8000;
-
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(mainRouter);
-
+app.use(morgan());
 const user = {
 	email: 'bob@gmail.com',
 	password: 12345,
 };
+
+app.use('/api', mainRouter);
 
 app.post('/register', (req, res, next) => {});
 

@@ -2,7 +2,11 @@ const {
 	getAllTodolist,
 	createTodolist,
 	updateTodolist,
+	getTodolist,
 	deleteTodolist,
+	createTask,
+	updateTask,
+	deleteTask,
 } = require('../controller/todolist.controller');
 const {
 	createTodolistValidator,
@@ -13,8 +17,14 @@ const authMiddleware = require('../middleware/auth.middleware');
 const router = require('express').Router();
 
 router.get('/', authMiddleware, getAllTodolist);
+router.get('/:todolistId', authMiddleware, getTodolist);
 router.post('/', authMiddleware, createTodolist);
 router.put('/:todolistId', updateTodolistValidator, updateTodolist);
+router.put('/:todolistId/task/:taskId', authMiddleware, updateTask);
+router.delete('/:todolistId/task/:taskId', authMiddleware, deleteTask);
+
 router.delete('/:todolistId', deleteTodolist);
+
+router.post('/:todolistId/task', authMiddleware, createTask);
 
 module.exports = router;
