@@ -16,12 +16,12 @@ const authMiddleware = require('../middleware/auth.middleware');
 
 const router = require('express').Router();
 
-router.get('/', authMiddleware, getAllTodolist);
-router.get('/:todolistId', authMiddleware, getTodolist);
-router.post('/', authMiddleware, createTodolist);
+router.get('/', getAllTodolist);
+router.get('/:todolistId', getTodolist);
+router.post('/', createTodolist);
 router.put('/:todolistId', updateTodolistValidator, updateTodolist);
-router.put('/:todolistId/task/:taskId', authMiddleware, updateTask);
-router.delete('/:todolistId/task/:taskId', authMiddleware, deleteTask);
+router.put('/:todolistId/task/:taskId', updateTask);
+router.delete('/:todolistId/task/:taskId', deleteTask);
 
 router.delete('/:todolistId', deleteTodolist);
 

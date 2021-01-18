@@ -12,9 +12,7 @@ const findTask = async (id) => {
 };
 exports.getAllTodolist = async (req, res, next) => {
 	try {
-		const todolists = await client.todolist.findMany({
-			where: { userId: req.userId },
-		});
+		const todolists = await client.todolist.findMany({});
 		res.status(200).json(todolists);
 	} catch (err) {
 		next(err);
@@ -36,9 +34,6 @@ exports.getTodolist = async (req, res, next) => {
 		if (!todolist) {
 			throw createError(404, 'todolist not found');
 		}
-		if (todolist.userId !== req.userId) {
-			throw createError(401, 'Unauthorized');
-		}
 
 		res.status(200).json(todolist);
 	} catch (err) {
@@ -50,7 +45,7 @@ exports.createTodolist = async (req, res, next) => {
 	try {
 		const title = req.body.title;
 		const createdTodolist = await client.todolist.create({
-			data: { title: title, user: { connect: { id: req.userId } } },
+			data: { title: title },
 		});
 		res.status(200).json(createdTodolist);
 	} catch (err) {
@@ -92,9 +87,7 @@ exports.createTask = async (req, res, next) => {
 		if (!todolist) {
 			throw createError(404, 'Todolist not Found');
 		}
-		if (todolist.userId !== req.userId) {
-			throw createError(401);
-		}
+
 		const createdTask = await client.task.create({
 			data: { title, done: false, todolist: { connect: { id: todolistId } } },
 		});
@@ -112,9 +105,7 @@ exports.updateTask = async (req, res, next) => {
 		if (!todolist) {
 			throw createError(404, 'Todolist not Found');
 		}
-		if (todolist.userId !== req.userId) {
-			throw createError(401);
-		}
+
 		const taskId = Number(req.params.taskId);
 		const newTitle = req.body.title;
 		const newDone = req.body.done;
@@ -140,9 +131,7 @@ exports.deleteTask = async (req, res, next) => {
 		if (!task) {
 			throw createError(404, 'Task not Found');
 		}
-		if (todolist.userId !== req.userId) {
-			throw createError(401);
-		}
+
 		const deletedTask = await client.task.delete({
 			where: { id: taskId },
 		});
