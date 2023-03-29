@@ -1,10 +1,10 @@
-# Todolist API 📓
+# Todolist API Workshop 📓
 
 _By Leonard Flachs_
 
 ## ✍ Description
 
-This project is a todolist REST API.
+This project is an example of a todolist REST API created for learning purposes.
 
 This project is build using Node.js, Express and Prisma and contains integration testing with Jest and Supertest.
 
