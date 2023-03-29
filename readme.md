@@ -1,5 +1,7 @@
 # Todolist API 📓
 
+_By Leonard Flachs_
+
 ## ✍ Description
 
 This project is a todolist REST API.
